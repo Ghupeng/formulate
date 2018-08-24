@@ -1,6 +1,9 @@
 {
   "name":"ghupeng/framing",
   "description":"Resource Storage SDK for PHP",
+  "version": "1.0.0",
+  "type": "library",
+  "license": "MIT",
   "keywords":["ghupeng","framing"],
   "authors":[
     {
