@@ -6,6 +6,7 @@
  * Time: 10:27
  */
 namespace framing;
+
 class Demo{
     public function test(){
         echo "This is framint __function__ test.";
