@@ -3,7 +3,7 @@
  * Created by vim.
  * User: huguopeng
  * Date: 2018/09/03
- * Time: 16:04:02
+ * Time: 21:04:02
  * By: Service.php
  */
 namespace framing\Init;
@@ -14,81 +14,78 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 
 class Service {
+    /**
+     * @param $di
+     */
+    public static function init(&$di) {
+        /**
+         * Setting up the view component
+         */
+        $di->setShared('view', function () {
+            $configApplication = \framing\Library\ConfigLibrary::get('config','application');
 
-	public static function init(&$di) {
-		/**
-		 * Setting up the view component
-		 */
-		$di->setShared('view', function () {
-				$config = \framing\Library\ConfigLibrary::get('config','application');
+            $view = new View();
+            $view->setDI($this);
+            $view->setViewsDir($configApplication->viewsDir);
 
-				$view = new View();
-				$view->setDI($this);
-				$view->setViewsDir($config->viewsDir);
+            $view->registerEngines([
+                '.volt' => function ($view) {
+                    $configApplication = \framing\Library\ConfigLibrary::get('config','application');
 
-				$view->registerEngines([
-						'.volt' => function ($view) {
-						$config = \framing\Library\ConfigLibrary::get('config','application');
+                    $volt = new VoltEngine($view, $this);
 
-						$volt = new VoltEngine($view, $this);
+                    $volt->setOptions([
+                        'compiledPath' => $configApplication->cacheDir,
+                        'compiledSeparator' => '_'
+                    ]);
+                    return $volt;
+                },
+                '.phtml' => PhpEngine::class
+            ]);
 
-						$volt->setOptions([
-							'compiledPath' => $config->cacheDir,
-							'compiledSeparator' => '_'
-						]);
+            return $view;
+        });
 
-						return $volt;
-					},
-					'.phtml' => PhpEngine::class
+        /**
+         * Database connection is created based in the parameters defined in the configuration file
+         */
+        $di->setShared('db', function () {
+            $configDatabase = \framing\Library\ConfigLibrary::get('config','database');
 
-				]);
+            $class = 'Phalcon\Db\Adapter\Pdo\\' . $configDatabase->adapter;
+            $params = [
+                'host'     => $configDatabase->host,
+                'username' => $configDatabase->username,
+                'password' => $configDatabase->password,
+                'dbname'   => $configDatabase->dbname,
+                'charset'  => $configDatabase->charset
+            ];
 
-				return $view;
-		});
+            if ($configDatabase->adapter == 'Postgresql') {
+                unset($params['charset']);
+            }
 
+            $connection = new $class($params);
 
-		/**
-		 * Database connection is created based in the parameters defined in the configuration file
-		 */
-		$di->setShared('db', function () {
-			$config = \framing\Library\ConfigLibrary::get('config','database');
+            return $connection;
+        });
 
-			$class = 'Phalcon\Db\Adapter\Pdo\\' . $config->adapter;
-			$params = [
-				'host'     => $config->host,
-				'username' => $config->username,
-				'password' => $config->password,
-				'dbname'   => $config->dbname,
-				'charset'  => $config->charset
-			];
+        /**
+         * If the configuration specify the use of metadata adapter use it or use memory otherwise
+         */
+        $di->setShared('modelsMetadata', function () {
+            return new MetaDataAdapter();
+        });
 
-			if ($config->adapter == 'Postgresql') {
-				unset($params['charset']);
-			}
+        /**
+         * Start the session the first time some component request the session service
+         */
+        $di->setShared('session', function () {
+            $session = new SessionAdapter();
+            $session->start();
 
-			$connection = new $class($params);
+            return $session;
+        });
 
-			return $connection;
-		});
-
-		/**
-		 * If the configuration specify the use of metadata adapter use it or use memory otherwise
-		 */
-		$di->setShared('modelsMetadata', function () {
-			return new MetaDataAdapter();
-		});
-
-
-		/**
-		 * Start the session the first time some component request the session service
-		 */
-		$di->setShared('session', function () {
-			$session = new SessionAdapter();
-			$session->start();
-
-			return $session;
-		});
-
-	}
+    }
 }
-
