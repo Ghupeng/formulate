@@ -6,14 +6,14 @@
  * Time: 14:02:41
  * By: ConfigLibrary.php
  */
-namespace framing/Library;
+namespace framing\Library;
 class ConfigLibraray {
 	/**
 	 * @$param string $filename 文件名
 	 * @$param string $module   模块
 	 *
 	 */
-	public static function init(string $filename,string $module) {
+	public static function get(string $filename,string $module) {
 		echo $filename . $module; 	
 	}
 }
