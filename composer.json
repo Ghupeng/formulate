@@ -16,7 +16,7 @@
   },
   "autoload":{
     "psr-4":{
-      "framing\\":"src/"
+      "framing\\Library\\":"src/Library"
     }
   }
 
