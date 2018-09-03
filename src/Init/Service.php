@@ -6,6 +6,7 @@
  * Time: 16:04:02
  * By: Service.php
  */
+namespace framing\Init;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 //use Phalcon\Mvc\Url as UrlResolver;
