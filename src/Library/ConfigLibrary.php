@@ -7,7 +7,7 @@
  * By: ConfigLibrary.php
  */
 namespace framing\Library;
-class ConfigLibraray {
+class ConfigLibrary {
 	/**
 	 * @$param string $filename 文件名
 	 * @$param string $module   模块
