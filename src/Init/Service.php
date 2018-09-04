@@ -97,9 +97,9 @@ class Service {
         $di->setShared('router', function () {
             // Use the annotations router. We're passing false as we don't want the router to add its default patterns
             $router = new RouterAnnotations(false);
-            $configRouter = \framing\Library\ConfigLibrary::get('config','router');
-            $modules = explode(',',$configRouter['list']);
-            // Read the annotations from ProductsController if the URI starts with /api/products
+            $configRouters = \framing\Library\ConfigLibrary::get('config','router','list');
+            $modules = explode(',',$configRouters);
+            // Read the annotations from XxxxController if the URI starts with /xxx/xxxx
             foreach ($modules as &$module) {
                 $router->addResource(ucfirst($module), '/'.lcfirst($module));
             }
@@ -111,7 +111,15 @@ class Service {
             // Create an event manager
             $eventsManager = new EventsManager();
             // Attach a listener for type 'dispatch'
-            $eventsManager->attach('dispatch:beforeNotFoundAction',new beforeNotFoundPlugin());
+            $configPlugins = \framing\Library\ConfigLibrary::get('config','plugin','list');
+            $temp_plugins = explode(',',$configPlugins);
+            foreach ($temp_plugins as &$temp_plugin) {
+                $plugin = explode('|',$temp_plugin);
+                $plugin_class = "\\framing\\Plugin\\".$plugin[1];
+                if(class_exists($plugin_class)) {
+                    $eventsManager->attach('dispatch:'.$plugin[0],new $plugin_class());
+                }
+            }
 
             $dispatcher = new MvcDispatcher();
 
