@@ -4,7 +4,7 @@
  * User: huguopeng
  * Date: 2018/09/04
  * Time: 19:07:38
- * By: RouterExecutePlugin.php
+ * By: beforeNotFoundPlugin.php
  */
 namespace framing\Plugin;
 use Exception;
@@ -12,7 +12,7 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
 
-class RouterExecutePlugin {
+class beforeNotFoundPlugin {
 
 	public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher, Exception $exception)
 	{

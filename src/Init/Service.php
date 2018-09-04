@@ -111,7 +111,7 @@ class Service {
             // Create an event manager
             $eventsManager = new EventsManager();
             // Attach a listener for type 'dispatch'
-            $eventsManager->attach('dispatch:beforeExecuteRoute',new RouterExecutePlugin());
+            $eventsManager->attach('dispatch:beforeNotFoundAction',new beforeNotFoundPlugin());
 
             $dispatcher = new MvcDispatcher();
 
