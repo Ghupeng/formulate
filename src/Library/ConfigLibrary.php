@@ -11,14 +11,16 @@ class ConfigLibrary {
     /**
      * @$param string $filename 文件名
      * @$param string $module   模块
-     *
+     * @$param string $key      键
      */
-    public static function get(string $filename,string $module) {
+    public static function get(string $filename,string $module,string $key='') {
         $runmode = \framing\Library\Runmode::get();
         $filename = CONF_PATH . '/' . $runmode . '/' . $filename . '.ini';
         $config = self::getConfigFile($filename,$module);
         if($config === null) {
             echo "文件不存在";die;
+        } else if(isset($config[$key])){
+            return $config[$key];
         } else {
             return $config;
         }
