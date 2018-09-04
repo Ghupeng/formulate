@@ -17,7 +17,9 @@
   "autoload":{
     "psr-4":{
       "framing\\Library\\":"src/Library",
-      "framing\\Init\\":"src/Init"
+      "framing\\Init\\":"src/Init",
+      "framing\\Plugin\\":"src/Plugin",
+      "framing\\Base\\":"src/Base"
     }
   }
 
