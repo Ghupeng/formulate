@@ -13,7 +13,9 @@ use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Mvc\Router\Annotations as RouterAnnotations;
-
+use Phalcon\Mvc\Dispatcher as MvcDispatcher;
+use Phalcon\Events\Event;
+use Phalcon\Events\Manager as EventsManager;
 
 class Service {
     /**
@@ -109,7 +111,7 @@ class Service {
             // Create an event manager
             $eventsManager = new EventsManager();
             // Attach a listener for type 'dispatch'
-            $eventsManager->attach('dispatch:beforeExecuteRoute',);
+            $eventsManager->attach('dispatch:beforeExecuteRoute',new RouterExecutePlugin());
 
             $dispatcher = new MvcDispatcher();
 
