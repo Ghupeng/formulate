@@ -7,23 +7,14 @@
  * By: beforeNotFoundPlugin.php
  */
 namespace framing\Plugin;
-use Exception;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\Dispatcher\Exception as DispatchException;
+use Phalcon\Mvc\User\Plugin;
 
-class beforeNotFoundPlugin {
+class beforeNotFoundPlugin extends Plugin{
 
-	public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher, Exception $exception)
-	{
-		// Default error action
-		$action = 'show503';
-
-		// Handle 404 exceptions
-		if ($exception instanceof DispatchException) {
-			$action = 'show404';
-		}
-		header("Location: https://www.baidu.com/");
-		return false;
-	}
+    public function beforeNotFoundAction(Event $event, Dispatcher $dispatcher) {
+        header("Location: https://www.baidu.com/");
+        return false;
+    }
 }
