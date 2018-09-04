@@ -12,6 +12,8 @@ use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Mvc\Router\Annotations as RouterAnnotations;
+
 
 class Service {
     /**
@@ -86,6 +88,36 @@ class Service {
 
             return $session;
         });
+
+        /**
+         * Open custom annotation routing
+         */
+        $di->setShared('router', function () {
+            // Use the annotations router. We're passing false as we don't want the router to add its default patterns
+            $router = new RouterAnnotations(false);
+            $configRouter = \framing\Library\ConfigLibrary::get('config','router');
+            $modules = explode(',',$configRouter['list']);
+            // Read the annotations from ProductsController if the URI starts with /api/products
+            foreach ($modules as &$module) {
+                $router->addResource(ucfirst($module), '/'.lcfirst($module));
+            }
+
+            return $router;
+        });
+
+        $di->set('dispatcher', function () {
+            // Create an event manager
+            $eventsManager = new EventsManager();
+            // Attach a listener for type 'dispatch'
+            $eventsManager->attach('dispatch:beforeExecuteRoute',);
+
+            $dispatcher = new MvcDispatcher();
+
+            // Bind the eventsManager to the view component
+            $dispatcher->setEventsManager($eventsManager);
+
+            return $dispatcher;
+        },true);
 
     }
 }
