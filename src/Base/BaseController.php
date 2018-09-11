@@ -10,15 +10,15 @@ namespace framing\Base;
 
 class BaseController extends \ControllerBase {
 
-	public function execute() {
-		$basePageInfo = (\Phalcon\DI::getDefault())->get("basePageInfo");
-		$class_name = "\\".APP_NAMESPACE."\\modules\\$basePageInfo->module\\Service\\".$basePageInfo->method;
-		if(class_exists($class_name)) {
-			$object = new $class_name();
-			$object->execute();
-		} else {
-			echo  "不存在";// 抛出异常
-		}
+    public function execute() {
+        $basePageInfo = (\Phalcon\DI::getDefault())->get("basePageInfo");
+        $class_name = "\\".APP_NAMESPACE."\\modules\\$basePageInfo->module\\Service\\".$basePageInfo->method;
+        if(class_exists($class_name)) {
+            $object = new $class_name();
+            $object->execute($basePageInfo);
+        } else {
+            throw new BaseException(BaseException::CONF_FILE_ERROR);
+        }
 
-	}
+    }
 }
