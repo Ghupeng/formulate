@@ -59,6 +59,7 @@ class Service {
             $class = 'Phalcon\Db\Adapter\Pdo\\' . $configDatabase->adapter;
             $params = [
                 'host'     => $configDatabase->host,
+                'post'     => $configDatabase->post,
                 'username' => $configDatabase->username,
                 'password' => $configDatabase->password,
                 'dbname'   => $configDatabase->dbname,
